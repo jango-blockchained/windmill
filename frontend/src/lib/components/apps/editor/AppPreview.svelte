@@ -30,7 +30,8 @@
 
 	const connectingInput = writable<ConnectingInput>({
 		opened: false,
-		input: undefined
+		input: undefined,
+		hoveredComponent: undefined
 	})
 
 	const runnableComponents = writable<Record<string, () => Promise<void>>>({})
@@ -61,7 +62,7 @@
 	$: width = $breakpoint === 'sm' ? 'max-w-[640px]' : 'w-full '
 </script>
 
-<div class="h-full w-full  {app.fullscreen ? '' : 'max-w-6xl'} px-4 mx-auto">
+<div class="h-full w-full {app.fullscreen ? '' : 'max-w-6xl'} mx-auto">
 	{#if $appStore.grid}
 		<div class={classNames('mx-auto pb-4', width)}>
 			<GridEditor {policy} />

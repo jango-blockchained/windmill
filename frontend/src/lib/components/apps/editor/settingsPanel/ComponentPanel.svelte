@@ -23,10 +23,11 @@
 	export let onDelete: (() => void) | undefined = undefined
 	export let rowColumns = false
 
-	const { app, staticOutputs, runnableComponents, worldStore } =
+	const { app, staticOutputs, runnableComponents, selectedComponent, worldStore } =
 		getContext<AppEditorContext>('AppEditorContext')
 
 	function removeGridElement() {
+		$selectedComponent = undefined
 		if (onDelete && component) {
 			delete $staticOutputs[component.id]
 			$staticOutputs = $staticOutputs

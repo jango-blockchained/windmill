@@ -47,7 +47,25 @@
 		}, 200)
 	}
 
-	$: fields && runnableInputValues && args && autoRefresh && testJobLoader && setDebouncedExecute()
+	function computeStaticValues() {
+		return Object.entries(fields)
+			.filter(([k, v]) => v.type == 'static')
+			.map(([name, field]) => {
+				return [name, field['value']]
+			})
+	}
+
+	let lazyStaticValues = computeStaticValues()
+	let currentStaticValues = lazyStaticValues
+
+	$: fields && (currentStaticValues = computeStaticValues())
+	$: if (JSON.stringify(currentStaticValues) != JSON.stringify(lazyStaticValues)) {
+		lazyStaticValues = currentStaticValues
+		setDebouncedExecute()
+	}
+
+	$: fields && (lazyStaticValues = computeStaticValues())
+	$: runnableInputValues && args && autoRefresh && testJobLoader && setDebouncedExecute()
 
 	// Test job internal state
 	let testJob: CompletedJob | undefined = undefined
