@@ -12,7 +12,14 @@
 	import { AppService, Policy } from '$lib/gen'
 	import { userStore, workspaceStore } from '$lib/stores'
 	import { faClipboard, faExternalLink, faSave } from '@fortawesome/free-solid-svg-icons'
-	import { Eye, Laptop2, Pencil, Smartphone } from 'lucide-svelte'
+	import {
+		AlignHorizontalSpaceAround,
+		Expand,
+		Eye,
+		Laptop2,
+		Pencil,
+		Smartphone
+	} from 'lucide-svelte'
 	import { getContext } from 'svelte'
 	import { Icon } from 'svelte-awesome'
 	import { copyToClipboard, sendUserToast } from '../../../utils'
@@ -162,10 +169,13 @@
 			<Alert title="Require saving" type="error">Save this app once before you can publish it</Alert
 			>
 		{:else}
-			<Alert title="App executed on behalf of publisher"
-				>Every runnable will run with the permissions of the publisher of the app. This ensures that
-				every users gets the same experience. Make sure that the app does not expose actions that
-				are too sensitive to be exposed publicly.</Alert
+			<Alert title="App executed on behalf of publisher">
+				A viewer of the app will execute the runnables of the app on behalf of the publisher
+				avoiding the risk that a resource or script would not be available to the viewer. To
+				guarantee tight security, a policy is computed at time of saving of the app which only allow
+				the scripts/flows referred to in the app to be called on behalf of. Furthermore, static
+				parameters are not overridable. Hence, users will only be able to use the app as intended by
+				the publisher without risk for leaking resources not used in the app.</Alert
 			>
 			<div class="mt-4" />
 			<Toggle
@@ -208,11 +218,13 @@
 	</DrawerContent>
 </Drawer>
 
-<div class="border-b flex flex-row justify-between py-1 gap-1 flex-wrap gap-y-2 px-4 items-center">
-	<div class="w-64">
+<div
+	class="border-b flex flex-row justify-between py-1 gap-4 overflow-x-auto gap-y-2 px-4 items-center"
+>
+	<div class="min-w-64 w-64">
 		<input type="text" placeholder="App summary" class="text-sm w-full" bind:value={$summary} />
 	</div>
-	<div class="flex gap-8 items-center">
+	<div class="flex gap-4 items-center grow justify-center">
 		<div>
 			<ToggleButtonGroup bind:selected={$mode}>
 				<ToggleButton position="left" value="dnd" size="xs">
@@ -235,18 +247,22 @@
 			</ToggleButtonGroup>
 		</div>
 
-		<ToggleButtonGroup bind:selected={$app.fullscreen}>
-			<ToggleButton position="left" value={false} size="xs"
-				>Centered &nbsp; <Tooltip
-					>The max width is 1168px and the content stay centered instead of taking the full page
-					width</Tooltip
-				></ToggleButton
-			>
-			<ToggleButton position="right" value={true} size="xs">Full</ToggleButton>
-		</ToggleButtonGroup>
+		<span class="hidden lg:block">
+			<ToggleButtonGroup bind:selected={$app.fullscreen}>
+				<ToggleButton position="left" value={false} size="xs"
+					><AlignHorizontalSpaceAround size={14} /> &nbsp; <Tooltip
+						>The max width is 1168px and the content stay centered instead of taking the full page
+						width</Tooltip
+					></ToggleButton
+				>
+				<ToggleButton position="right" value={true} size="xs"><Expand size={14} /></ToggleButton>
+			</ToggleButtonGroup>
+		</span>
 	</div>
 	<div class="flex flex-row grow gap-4 justify-end ">
-		<AppExportButton app={$app} />
+		<span class="hidden lg:block">
+			<AppExportButton app={$app} />
+		</span>
 
 		<Button
 			on:click={() => (publishDrawerOpen = true)}
